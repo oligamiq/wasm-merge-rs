@@ -1,0 +1,3 @@
+[submodule "binaryen_submodule"]
+	path = binaryen_submodule
+	url = https://github.com/WebAssembly/binaryen
