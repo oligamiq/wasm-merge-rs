@@ -95,7 +95,7 @@ fn main() -> anyhow::Result<()> {
 fn get_binaryen_dir() -> anyhow::Result<PathBuf> {
     let manifest_dir = std::env::var("CARGO_MANIFEST_DIR")?;
     let manifest_dir = Path::new(&manifest_dir);
-    let binaryen_packaged_dir = manifest_dir.join("binaryen");
+    let binaryen_packaged_dir = manifest_dir.join("binaryen_merge");
     let binaryen_submodule_dir = manifest_dir.join("binaryen_submodule");
 
     match (

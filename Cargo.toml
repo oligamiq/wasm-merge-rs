@@ -1,13 +1,31 @@
+[workspace]
+resolver = "3"
+members = ["./", "examples/with_wasm_opt"]
+default-members = ["./"]
+
 [package]
+authors = ["oligami <nziq53@gmail.com>"]
 name = "wasm-merge-sys"
 version = "0.1.0"
 description = "Native wasm-merge build (Rust bindings for Binaryen's wasm-merge)"
 license = "MIT OR Apache-2.0"
 edition = "2024"
 documentation = "https://docs.rs/wasm-merge-sys"
-repository = "https://github.com/yourusername/wasm-merge-rs"
+repository = "https://github.com/oligamiq/wasm-merge-rs"
 readme = "README.md"
-links = "binaryen"
+links = "binaryen_merge"
+keywords = ["binaryen", "wasm-merge"]
+
+[package.metadata.release]
+release = false
+tag = true
+tag-prefix = ""
+
+[workspace.metadata.release]
+tag = false
+
+[workspace.dependencies]
+wasm-merge-sys = { path = "./" }
 
 [build-dependencies]
 anyhow = "1.0.100"

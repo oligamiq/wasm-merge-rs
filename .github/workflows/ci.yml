@@ -103,12 +103,14 @@ jobs:
           rustc --version
           cargo build --verbose
           cargo test -- --nocapture
+          cargo test -p with_wasm_opt -- --nocapture
       - if: matrix.target != ''
         name: Build / test 32-bit
         run: |
           rustc --version
           cargo build --verbose --target=${{matrix.target}}
           cargo test --target=${{matrix.target}} -- --nocapture
+          cargo test -p with_wasm_opt -- --nocapture
 
   non-dwarf:
     name: Without dwarf feature

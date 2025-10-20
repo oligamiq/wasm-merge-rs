@@ -1,0 +1,11 @@
+[package]
+name = "with_wasm_opt"
+version = "0.1.0"
+edition = "2024"
+
+[package.metadata.release]
+release = false
+
+[dependencies]
+wasm-merge-sys.workspace = true
+wasm-opt = "0.116"
