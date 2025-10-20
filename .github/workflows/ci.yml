@@ -1,0 +1,127 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: -D warnings
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [macos-11, windows-2019, ubuntu-20.04]
+        rust: [stable, 1.48.0]
+        c-compiler: ['']
+        cxx-compiler: ['']
+        target: ['']
+        include:
+          - os: ubuntu-20.04
+            rust: nightly
+          - os: ubuntu-20.04
+            rust: beta
+          - os: ubuntu-20.04
+            target: i686-unknown-linux-gnu
+            rust: stable
+          - os: ubuntu-20.04
+            rust: stable
+          - os: windows-2019
+            target: i686-pc-windows-msvc
+            rust: stable
+          - os: windows-2019
+            rust: stable
+          - os: ubuntu-20.04
+            rust: stable
+          - os: ubuntu-20.04
+            c-compiler: clang
+            cxx-compiler: clang++
+            rust: stable
+          - os: ubuntu-20.04
+            c-compiler: gcc-7
+            cxx-compiler: g++-7
+            rust: stable
+          - os: ubuntu-20.04
+            c-compiler: clang-7
+            cxx-compiler: clang++-7
+            rust: stable
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - if: matrix.c-compiler == 'clang'
+        name: Install clang
+        run: |
+          sudo apt-get update
+          sudo apt-get install clang
+
+      - if: matrix.c-compiler == 'clang-7'
+        name: Install clang-7
+        run: |
+          sudo apt-get update
+          sudo apt-get install clang-7
+
+      - if: matrix.c-compiler == 'gcc-7'
+        name: Install gcc-7
+        run: |
+          sudo apt-get update
+          sudo apt-get install gcc-7 g++-7
+
+      - uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+      - uses: actions/checkout@v3
+      - name: Checkout submodule
+        run: git submodule update --init --recursive
+
+      - if: matrix.target != ''
+        run: rustup target add ${{matrix.target}}
+
+      - if: ${{ matrix.target != '' && matrix.os == 'ubuntu-20.04' }}
+        name: Install cross tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install gcc-multilib g++-multilib
+
+      - if: ${{ matrix.target == '' && matrix.c-compiler == '' }}
+        name: Build / test
+        run: |
+          rustc --version
+          cargo build --verbose
+          cargo test -- --nocapture
+      - if: ${{ matrix.target == '' && matrix.c-compiler != '' }}
+        name: Build / test with alt compiler
+        env:
+          CC: ${{matrix.c-compiler}}
+          CXX: ${{matrix.cxx-compiler}}
+        run: |
+          $CC --version
+          $CXX --version
+          rustc --version
+          cargo build --verbose
+          cargo test -- --nocapture
+      - if: matrix.target != ''
+        name: Build / test 32-bit
+        run: |
+          rustc --version
+          cargo build --verbose --target=${{matrix.target}}
+          cargo test --target=${{matrix.target}} -- --nocapture
+
+  non-dwarf:
+    name: Without dwarf feature
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Checkout submodule
+        run: git submodule update --init --recursive
+      - run: cargo test --no-default-features
+
+  fmt:
+    name: Cargo fmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: cargo fmt --check
