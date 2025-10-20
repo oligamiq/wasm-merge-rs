@@ -70,14 +70,9 @@ pub fn run_wasm_merge(args: &[String]) -> i32 {
         .collect();
 
     // Create array of pointers to C strings
-    let c_args: Vec<*const c_char> = c_strings
-        .iter()
-        .map(|s| s.as_ptr())
-        .collect();
+    let c_args: Vec<*const c_char> = c_strings.iter().map(|s| s.as_ptr()).collect();
 
-    unsafe {
-        wasm_merge_main(c_args.len() as c_int, c_args.as_ptr())
-    }
+    unsafe { wasm_merge_main(c_args.len() as c_int, c_args.as_ptr()) }
 }
 
 /// Just here so that cxx-build becomes willing to manage the set of include

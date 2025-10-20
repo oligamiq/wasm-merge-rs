@@ -7,13 +7,10 @@ use wasm_merge_sys::run_wasm_merge;
 fn main() {
     // Example arguments for wasm-merge
     // Format: wasm-merge <input1.wasm> <name1> <input2.wasm> <name2> -o <output.wasm>
-    let args = vec![
-        "wasm-merge".to_string(),
-        "--help".to_string(),
-    ];
+    let args = vec!["wasm-merge".to_string(), "--help".to_string()];
 
     let exit_code = run_wasm_merge(&args);
-    
+
     if exit_code == 0 {
         println!("wasm-merge executed successfully");
     } else {
