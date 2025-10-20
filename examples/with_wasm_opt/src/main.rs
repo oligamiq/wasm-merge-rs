@@ -16,7 +16,10 @@ fn main() {
     let exit_code = run_wasm_merge(&args);
 
     if exit_code != 0 {
-        println!("Note: wasm-merge --version returned exit code: {}\n", exit_code);
+        println!(
+            "Note: wasm-merge --version returned exit code: {}\n",
+            exit_code
+        );
     }
 
     // Show wasm-merge help
@@ -25,7 +28,10 @@ fn main() {
     let exit_code = run_wasm_merge(&args);
 
     if exit_code != 0 {
-        println!("Note: wasm-merge --help returned exit code: {}\n", exit_code);
+        println!(
+            "Note: wasm-merge --help returned exit code: {}\n",
+            exit_code
+        );
     }
 
     // Example of how you would merge and optimize wasm files:
